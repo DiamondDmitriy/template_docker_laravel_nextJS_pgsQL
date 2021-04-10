@@ -1,0 +1,60 @@
+version: '3.7'
+
+services:
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        environment:
+            DB_HOST: 127.0.0.1
+            DB_PORT: 5432
+            DB_USERNAME: rsadmin
+            DB_PASWORD: test
+        ports:
+            - 8000:8000
+        volumes: 
+            - ./backend:/app/backend
+        depends_on:
+            - pgsql
+            - redis
+        networks:
+            - app
+            
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        tty: true
+        ports: 
+            - 3000:3000
+        volumes:
+            - ./frontend:/app/frontend  
+        depends_on:
+            - backend 
+        networks:
+            - app
+
+    pgsql:
+        image: postgres:13.0
+        restart: always
+        ports: 
+            - 5432:5432
+        environment:
+            - POSTGRES_USER=rsadmin
+            - POSTGRES_PASSWORD=test
+            - POSTGRES_DB=extchange
+        volumes:
+            - ./data/postgres:/var/libs/postgresql/data
+        networks:
+            - app
+
+    redis:
+        image: redis:alpine
+        volumes:
+            - ./data/redis:/data
+        networks: 
+            - app
+            
+networks:
+    app:
+        driver: bridge
