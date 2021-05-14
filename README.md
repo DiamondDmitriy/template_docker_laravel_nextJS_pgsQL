@@ -8,3 +8,7 @@
 * NextJS: 1.1 - https://nextjs.org/
 * Postgres: 13.0 - https://www.postgresql.org/
 * Redis: alpine - https://redis.io/
+
+
+## Юзабельные библиотеки
+* https://github.com/box/spout - Работа с большими эксель файлами
